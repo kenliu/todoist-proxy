@@ -11,12 +11,12 @@ func main() {
 	// TODOIST_PROXY_ALLOW is a comma-separated list of Todoist project IDs whose
 	// data (and the data of their descendant projects) will be included in sync
 	// responses. All other project data is stripped before returning to clients.
-	allowedIDs := parseAllowedProjects(os.Getenv("TODOIST_PROXY_ALLOW"))
-	if len(allowedIDs) == 0 {
-		log.Println("warning: TODOIST_PROXY_ALLOW is not set; all projects will be filtered out")
-	} else {
-		log.Printf("allowing %d project(s): %v", len(allowedIDs), allowedIDs)
+	allowEnv := os.Getenv("TODOIST_PROXY_ALLOW")
+	if allowEnv == "" {
+		log.Fatal("TODOIST_PROXY_ALLOW is not set")
 	}
+	allowedIDs := parseAllowedProjects(allowEnv)
+	log.Printf("allowing %d project(s): %v", len(allowedIDs), allowedIDs)
 
 	proxy := newReverseProxy()
 
